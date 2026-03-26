@@ -121,10 +121,11 @@ export default function DashboardLayout() {
       </AnimatePresence>
 
       {/* ── Sidebar ── */}
-      <motion.aside
-        initial={false}
-        animate={{ x: isSidebarOpen ? 0 : '-100%' }}
-        className="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-subtle flex flex-col lg:static lg:translate-x-0 shadow-xl transition-colors duration-300"
+      <aside
+        className="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-subtle flex flex-col shadow-xl transition-all duration-300 lg:translate-x-0 lg:static"
+        style={{
+          transform: `translateX(${isSidebarOpen ? '0' : '-100%'})`,
+        }}
       >
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-subtle shrink-0">
@@ -215,7 +216,7 @@ export default function DashboardLayout() {
             Sign Out
           </button>
         </div>
-      </motion.aside>
+      </aside>
 
       {/* ── Main content ── */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">

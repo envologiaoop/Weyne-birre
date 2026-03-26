@@ -30,8 +30,8 @@ export default function Settings() {
   const [isInitializing, setIsInitializing] = useState(false);
   
   const {
-    offlineReady: [offlineReady, setOfflineReady],
-    needUpdate: [needUpdate, setNeedUpdate],
+    offlineReady,
+    needRefresh,
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(r) {
@@ -40,22 +40,16 @@ export default function Settings() {
     onRegisterError(error) {
       console.log('SW registration error', error);
     },
-    onOfflineReady() {
-      setOfflineReady(true);
-    },
-    onNeedRefresh() {
-      setNeedUpdate(true);
-    },
   });
+
+  const [isOfflineReady, setOfflineReady] = offlineReady;
+  const [needUpdate, setNeedUpdate] = needRefresh;
 
   useEffect(() => {
     const handleOfflineReady = () => setOfflineReady(true);
     window.addEventListener('pwa-offline-ready', handleOfflineReady);
     return () => window.removeEventListener('pwa-offline-ready', handleOfflineReady);
   }, [setOfflineReady]);
-
-  const isOfflineReady = offlineReady;
-  const isNeedUpdate = needUpdate;
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
@@ -554,12 +548,12 @@ export default function Settings() {
                     <div className="p-10 rounded-[40px] bg-white/[0.01] border border-white/[0.03] shadow-inner group">
                       <div className="flex items-center justify-between mb-8">
                         <h5 className="text-[10px] font-bold text-white/45 uppercase tracking-[0.4em]">App Version</h5>
-                        <RefreshCw className={cn("w-5 h-5 text-white/45 transition-all duration-500", isNeedUpdate && "text-brand animate-spin")} />
+                        <RefreshCw className={cn("w-5 h-5 text-white/45 transition-all duration-500", needUpdate && "text-brand animate-spin")} />
                       </div>
                       <p className="text-2xl font-display font-bold text-white mb-3">
-                        {isNeedUpdate ? 'Update Available' : 'Up to Date'}
+                        {needUpdate ? 'Update Available' : 'Up to Date'}
                       </p>
-                      {isNeedUpdate ? (
+                      {needUpdate ? (
                         <button 
                           onClick={() => updateServiceWorker(true)}
                           className="mt-4 text-[11px] font-bold text-brand uppercase tracking-[0.2em] hover:text-brand-dark transition-colors"
