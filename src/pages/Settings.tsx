@@ -30,8 +30,8 @@ export default function Settings() {
   const [isInitializing, setIsInitializing] = useState(false);
   
   const {
-    offlineReady: [offlineReady, setOfflineReady],
-    needUpdate: [needUpdate, setNeedUpdate],
+    offlineReady,
+    needUpdate,
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(r) {
@@ -40,22 +40,16 @@ export default function Settings() {
     onRegisterError(error) {
       console.log('SW registration error', error);
     },
-    onOfflineReady() {
-      setOfflineReady(true);
-    },
-    onNeedRefresh() {
-      setNeedUpdate(true);
-    },
   });
+
+  const [isOfflineReady, setOfflineReady] = offlineReady;
+  const [isNeedUpdate, setNeedUpdate] = needUpdate;
 
   useEffect(() => {
     const handleOfflineReady = () => setOfflineReady(true);
     window.addEventListener('pwa-offline-ready', handleOfflineReady);
     return () => window.removeEventListener('pwa-offline-ready', handleOfflineReady);
   }, [setOfflineReady]);
-
-  const isOfflineReady = offlineReady;
-  const isNeedUpdate = needUpdate;
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
